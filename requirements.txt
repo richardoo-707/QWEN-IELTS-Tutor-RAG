@@ -1,0 +1,10 @@
+langchain
+langchain-community
+langchain-core
+langgraph
+langchain-chroma
+chromadb
+sentence-transformers
+rank_bm25
+huggingface-hub
+torch

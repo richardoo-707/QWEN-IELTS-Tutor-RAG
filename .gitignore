@@ -1,0 +1,12 @@
+# 忽略向量数据库 (因为很大，且可以由 build.py 生成)
+vector_db/
+
+# 忽略 Python 缓存和环境
+__pycache__/
+*.pyc
+.env
+.venv
+env/
+venv/
+.DS_Store
+data/
