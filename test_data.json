@@ -1,0 +1,22 @@
+[
+    {
+        "question": "What are the four criteria for IELTS Writing Task 2?",
+        "ground_truth": "The four criteria are Task Response (TR), Coherence and Cohesion (CC), Lexical Resource (LR), and Grammatical Range and Accuracy (GRA). Each counts for 25% of the score."
+    },
+    {
+        "question": "How is the band score calculated if I get 6.5, 6.5, 7.0, and 7.0?",
+        "ground_truth": "The overall band score is the average of the four component scores, rounded to the nearest half or whole band. (6.5+6.5+7.0+7.0)/4 = 6.75, which rounds up to 7.0."
+    },
+    {
+        "question": "Can I use informal language in General Training Task 1?",
+        "ground_truth": "Yes, if the prompt asks you to write to a friend, you should use an informal tone. However, for formal complaints or job applications, you must use formal language."
+    },
+    {
+        "question": "Is there a penalty for writing under the word limit?",
+        "ground_truth": "Yes, writing significantly under the word count (150 words for Task 1, 250 for Task 2) will result in a penalty under the Task Achievement or Task Response criterion."
+    },
+    {
+        "question": "What is the difference between Band 6 and Band 7 in Lexical Resource?",
+        "ground_truth": "Band 7 requires using a sufficient range of vocabulary with some flexibility and precision, and using less common lexical items with some awareness of style and collocation. Band 6 uses an adequate range but with some inaccuracy."
+    }
+]
