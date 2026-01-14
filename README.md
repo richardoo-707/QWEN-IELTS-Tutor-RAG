@@ -6,10 +6,12 @@
 
 ## 💡 为什么做这个项目？
 
-for正在备考雅思的学生，通用大模型在回答具体的评分标准（如 Band Descriptors）时经常产生幻觉，无法具备针对性的提出批改建议进行优化。通过构建这个 RAG 系统，我不仅深入实践了 Retrieval-Augmented Generation 和 Agentic AI 的用法，并且实现在有限算力下的性能优化。（将LLM给GPU,embedding、reranker给CPU，实现在3060-6G下跑通7B模型）
-
+for正在备考雅思的学生，通用大模型在回答具体的评分标准（如 Band Descriptors）时经常产生幻觉，无法具备针对性的提出批改建议进行优化。
+## 💡 我做了什么？
 * **传统 RAG**：检索 -> 生成 -> 结束，是一条直线。
-* **目标Agent**：检索 -> 生成 -> 检查 -> 发现不对 -> 改写问题 -> 重新检索，这是一个圆环。
+* **最终Agent**：检索 -> 生成 -> 检查 -> 发现不对 -> 改写问题 -> 重新检索，这是一个圆环。
+* **解决的痛点**通过构建这个 RAG 系统，我不仅深入实践了 Retrieval-Augmented Generation 和 Agentic AI 的用法，并且实现在有限算力下的性能优化。（将LLM给GPU,embedding、reranker给CPU，实现在3060-6G下跑通7B模型），并且对最终的RAG模型进行了Locust压测、Redis缓存:将本地化模型包装为一个api接                口模拟实际同时多用户使用；在此中发现了回答的慢且重复生成的问题，于是加入了Redis,解决本地单卡推理在高并发场景下的性能瓶颈，
+
 
 ## 📖 项目简介 (Introduction)
 
