@@ -63,6 +63,65 @@ for正在备考雅思的学生，通用大模型在回答具体的评分标准�
 
 > **解读**: 引入 Cross-Encoder 重排序后，模型的幻觉大幅减少 (Faithfulness 提升)，证明了“先粗排后精排”策略在雅思知识问答中的必要性。
 > 
+> ## 🚀 性能优化：Redis 缓存集成 (Performance Optimization)
+
+为了解决本地单卡 (Single GPU) 推理在高并发场景下的性能瓶颈，本项目引入了 **Redis** 作为一级缓存层。
+
+### 1. 缓存架构逻辑
+* **指纹生成**：对用户输入的 `question` 进行 MD5 哈希计算，生成唯一的 Cache Key。
+* **Look-aside 策略**：
+    * **Hit (命中)**：如果 Redis 中存在该 Key，直接返回缓存的 JSON 结果，跳过 LLM 推理（延迟 < 10ms）。
+    * **Miss (未命中)**：调用 LangChain Agent 进行推理，将结果存入 Redis 并设置过期时间（默认 1小时），然后返回给用户。
+
+### 2. 启动步骤
+确保你已经安装并启动了 Redis 服务 (推荐使用 Redis 5.0+ Windows 版本)。
+
+1.  **启动 Redis 服务端**：
+    ```powershell
+    # 在 Redis 安装目录下运行
+    .\redis-server.exe --bind 127.0.0.1
+    ```
+
+2.  **启动带有缓存功能的后端**：
+    ```powershell
+    # 确保 Ollama 服务也在运行中
+    python server.py
+    ```
+    *(注：确保 server.py 中已包含 Redis 连接逻辑)*
+
+---
+
+## 🧪 压力测试与实验报告 (Load Testing & Benchmark)
+
+本项目使用 **Locust** 进行了严格的负载测试，以验证缓存机制对系统吞吐量（RPS）和响应延迟（Latency）的优化效果。
+
+### 1. 测试环境
+* **工具**：Locust
+* **模拟负载**：5 Users, Spawn Rate 1 (模拟 5 人并发提问)
+* **硬件限制**：本地单 GPU (Local Single GPU Deployment)
+
+### 2. 运行测试
+
+启动 Locust 压测脚本
+locust -f locustfile.py --host http://localhost:8000
+
+
+### 3. 实验结果对比 (Before & After)
+
+基于 900+ 次请求的压测数据对比分析：
+
+| 核心指标 (Metrics) | 🐢 无缓存 (Baseline) | ⚡ 开启 Redis 缓存 (Optimized) | 提升幅度 |
+| :--- | :--- | :--- | :--- |
+| **中位数延迟 (Median Latency)** | 61,000 ms (61秒) | **4 ms** | **🚀 提升 15,000 倍** |
+| **平均延迟 (Avg Latency)** | 63,330 ms | 5,925 ms | 📉 降低 90% |
+| **请求失败率 (Failure Rate)** | 39% (拥堵导致超时) | **2%** (系统稳定) | ✅ 显著提升可用性 |
+| **吞吐量 (RPS)** | ~0.0 | 0.8 | 📈 吞吐量大增 |
+
+> **📊 实验结论**
+>
+> 在高并发重复查询场景下，引入 Redis 缓存将系统从“不可用状态”（高延迟、高丢包）转变为“高可用状态”（毫秒级响应），极大缓解了本地大模型的算力瓶颈。
+
+
 ## 🧩 技术栈 (Tech Stack)
 
 * **LLM Runtime**: Ollama (Running Qwen2.5-7B-Int4)
@@ -83,3 +142,4 @@ cd IELTS-Tutor-RAG
 
 # 安装依赖
 pip install -r requirements.txt
+
